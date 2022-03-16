@@ -46,3 +46,16 @@ export {
   PhoneNumberSearchRequest,
   PhoneNumberType
 } from "./generated/src/models/";
+
+export {
+  SipConfiguration,
+  SipConfigurationPatch,
+  Trunk,
+  TrunkPatch,
+  TrunkRoute,
+  CommunicationError,
+  SipRoutingClientGetSipConfigurationResponse as GetSipConfigurationResponse,
+  SipRoutingClientOptionalParams as PatchSipConfigurationOptionalParams,
+  SipRoutingClientPatchSipConfigurationResponse as PatchSipConfigurationResponse,
+  SipRoutingClientPatchSipConfigurationOptionalParams as OptionalParams  
+} from "./generated/src/siprouting/models";
