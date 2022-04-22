@@ -10,9 +10,15 @@ import { CosmosClient } from "../../src";
 import { SessionContainer } from "../../src/session/sessionContainer";
 import { endpoint } from "../public/common/_testConfig";
 import { masterKey } from "../public/common/_fakeTestSecrets";
-import { addEntropy, getTestDatabase, removeAllDatabases } from "../public/common/TestHelpers";
+import {
+  addEntropy,
+  assertThrowsAsync,
+  getTestDatabase,
+  removeAllDatabases,
+} from "../public/common/TestHelpers";
 import { RequestContext } from "../../src";
 import { Response } from "../../src/request/Response";
+import { assign } from "underscore";
 
 describe("New session token", function () {
   it("preserves tokens", async function () {
@@ -68,6 +74,95 @@ describe("New session token", function () {
     assert.equal(responseToken, token);
     assert.equal(responseToken, rqContext?.headers["x-ms-session-token"]);
   });
+});
+
+describe("Integrated Cache Staleness", async function (this: Suite) {
+  beforeEach(async function () {
+    await removeAllDatabases();
+  });
+  const dbId = addEntropy("maxIntegratedCacheTestDB");
+  const containerId = addEntropy("maxIntegratedCacheTestContainer");
+  const dedicatedGatewayMaxAge = 600000;
+  const client = new CosmosClient({
+    endpoint,
+    key: masterKey,
+    consistencyLevel: ConsistencyLevel.Eventual,
+    plugins: [
+      {
+        on: "request",
+        plugin: async (context, next) => {
+          it("Should check if the max integrated cache staleness header is set and the value is correct.", async function () {
+            if (context.headers["x-ms-consistency-level"]) {
+              if (context.resourceType == ResourceType.item) {
+                if (context.headers["x-ms-dedicatedgateway-max-age"]) {
+                  assert.strictEqual(
+                    context.headers["x-ms-dedicatedgateway-max-age"].valueOf(),
+                    dedicatedGatewayMaxAge
+                  );
+                } else {
+                  assert(
+                    context.headers["x-ms-dedicatedgateway-max-age"],
+                    "x-ms-dedicatedgateway-max-age is not set."
+                  );
+                  assert.ifError(context.headers["x-ms-dedicatedgateway-max-age"]);
+                }
+              } else {
+                assert(
+                  context.headers["x-ms-dedicatedgateway-max-age"],
+                  "Attempt to use x-ms-dedicatedgateway-max-age on a non-item request."
+                );
+                assert.ifError(context.headers["x-ms-dedicatedgateway-max-age"]);
+              }
+            } else {
+              assert(
+                context.headers["x-ms-consistency-level"],
+                "x-ms-consistency-level is not set."
+              );
+              assert.ifError(context.headers["x-ms-consistency-level"]);
+            }
+          });
+          const response = await next(context);
+          return response;
+        },
+      },
+    ],
+  });
+  const itemRequestFeedOptions = {
+    maxIntegratedCacheStalenessInMs: dedicatedGatewayMaxAge,
+  };
+  const { database } = await client.databases.createIfNotExists({
+    id: dbId,
+  });
+  const { container } = await database.containers.createIfNotExists({
+    id: containerId,
+  });
+
+  // Should pass with maxIntegratedCacheStalenessInMs and consistency level set.
+  await container.items.create({ id: "1" });
+  await container.item("1").read(itemRequestFeedOptions);
+
+  // Should pass with maxIntegratedCacheStalenessInMs and consistency level set.
+  // read document.
+  await container.items.readAll(itemRequestFeedOptions).fetchAll();
+
+  // query documents
+  const querySpec = {
+    query: "SELECT * FROM root r WHERE r.id=@id",
+    parameters: [
+      {
+        name: "@id",
+        value: "1",
+      },
+    ],
+  };
+  await container.items.query(querySpec, itemRequestFeedOptions).fetchAll();
+
+  //Should fail: maxIntegratedCacheStalenessInMs should only be set at the item request level and query feed options
+  assert.doesNotThrow(async () => {
+    await container.read({
+      maxIntegratedCacheStalenessInMs: dedicatedGatewayMaxAge,
+    });
+  }, "maxIntegratedCacheStalenessInMs should only be set at the item request level and query feed options");
 });
 
 // For some reason this test does not pass against the emulator. Skipping it for now
