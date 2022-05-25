@@ -1,7 +1,7 @@
 {
   "name": "@azure/abort-controller",
   "sdk-type": "client",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Microsoft Azure SDK for JavaScript - Aborter",
   "main": "./dist/index.js",
   "module": "dist-esm/src/index.js",
@@ -81,7 +81,7 @@
     "chai": "^4.2.0",
     "cross-env": "^7.0.2",
     "downlevel-dts": "^0.8.0",
-    "eslint": "^7.15.0",
+    "eslint": "^8.0.0",
     "karma": "^6.2.0",
     "karma-chrome-launcher": "^3.0.0",
     "karma-coverage": "^2.0.0",
