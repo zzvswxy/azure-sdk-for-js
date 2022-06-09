@@ -10,7 +10,14 @@ import {
 import { expect } from "chai";
 import { env, Recorder } from "../src";
 import { createRecordingRequest } from "../src/utils/createRecordingRequest";
-import { getTestMode, isLiveMode, RecorderError, RecordingStateManager } from "../src/utils/utils";
+import { paths } from "../src/utils/paths";
+import {
+  getTestMode,
+  isLiveMode,
+  isRecordMode,
+  RecorderError,
+  RecordingStateManager,
+} from "../src/utils/utils";
 
 const testRedirectedRequest = (
   client: Recorder,
@@ -47,15 +54,6 @@ describe("TestProxyClient functions", () => {
   };
 
   describe("redirectRequest method", () => {
-    it("request unchanged if not playback or record modes", function () {
-      env.TEST_MODE = "live";
-      testRedirectedRequest(
-        client,
-        () => initialRequest,
-        (req) => req
-      );
-    });
-
     ["record", "playback"].forEach((testMode) => {
       it(
         `${testMode} mode: ` + "request unchanged if request URL already points to test proxy",
@@ -140,12 +138,20 @@ describe("TestProxyClient functions", () => {
       it("throws if not received a 200 status code", async function () {
         env.TEST_MODE = testMode;
         const recordingId = "dummy-recording-id";
-        clientHttpClient.sendRequest = (): Promise<PipelineResponse> => {
-          return Promise.resolve({
-            status: 404,
-            headers: createHttpHeaders({ "x-recording-id": recordingId }),
-            request: initialRequest,
-          });
+        clientHttpClient.sendRequest = (req): Promise<PipelineResponse> => {
+          if (req.url.endsWith(paths.setRecordingOptions)) {
+            return Promise.resolve({
+              headers: createHttpHeaders(),
+              status: 200,
+              request: initialRequest,
+            });
+          } else {
+            return Promise.resolve({
+              status: 404,
+              headers: createHttpHeaders({ "x-recording-id": recordingId }),
+              request: initialRequest,
+            });
+          }
         };
         try {
           await client.start({ envSetupForPlayback: {} });
@@ -294,6 +300,27 @@ describe("TestProxyClient functions", () => {
       expect(returnedRequest.body).not.to.be.undefined;
       expect(returnedRequest.headers.get("x-recording-id")).to.equal(client.recordingId);
       expect(returnedRequest.url).to.equal(initialRequest.url);
+    });
+  });
+
+  describe("getTestMode", () => {
+    it("treats the TEST_MODE environment variable case-insensitively", () => {
+      [
+        "record",
+        "RECORD",
+        "Record",
+        "playback",
+        "PLAYBACK",
+        "Playback",
+        "live",
+        "LIVE",
+        "Live",
+      ].forEach((testMode) => {
+        env.TEST_MODE = testMode;
+        expect(getTestMode()).to.equal(testMode.toLowerCase());
+        expect(isRecordMode()).to.equal(testMode.toLowerCase() === "record");
+        expect(isLiveMode()).to.equal(testMode.toLowerCase() === "live");
+      });
     });
   });
 });
