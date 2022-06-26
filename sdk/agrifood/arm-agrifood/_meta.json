@@ -1,0 +1,8 @@
+{
+  "commit": "88c28cb49b174651235f297ee4f41f1ca060ea4d",
+  "readme": "agrifood/resource-manager/readme.md",
+  "autorest_command": "autorest --version=3.7.3 --typescript --modelerfour.lenient-model-deduplication --head-as-boolean=true --license-header=MICROSOFT_MIT_NO_VERSION --generate-test --typescript-sdks-folder=/sdk-repo /spec-repo/specification/agrifood/resource-manager/readme.md --use=@autorest/typescript@6.0.0-alpha.19.20220425.1",
+  "repository_url": "https://github.com/Azure/azure-rest-api-specs.git",
+  "release_tool": "@azure-tools/js-sdk-release-tools@2.3.2",
+  "use": "@autorest/typescript@6.0.0-alpha.19.20220425.1"
+}
