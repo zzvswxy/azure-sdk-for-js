@@ -44,7 +44,7 @@ We are working on to automatically generate everything right now, but currently 
     add-credentials: true
     credential-scopes: https://farmbeats.azure.net/.default
     use-extension:
-      "@autorest/typescript": "6.0.0-beta.14"
+      "@autorest/typescript": "6.0.0-rc.1"
     ```
     ~~~
 
@@ -101,19 +101,38 @@ We are working on to automatically generate everything right now, but currently 
 
 # How to write test for RLC
 
-In order to release it, we need to add some tests for it to make sure we are delivering high quality packages. but before we add the test, we need to add a generate-test: true make the code generator generate the necessary change in package.json and tsconfig.json so that test framework can work. Once the generation finished, you will see a sampleTest.spec.ts file in your `{PROJECT_ROOT}/test/public` folder, which only has a empty test and you may change them into test against your own services.
+In order to release it, we need to add some tests for it to make sure we are delivering high quality packages. but before we add the test, we need to add a `generate-test: true` make the code generator generate the necessary change in `package.json` and `tsconfig.json` so that test framework can work. Once the generation finished, you will see a  `sampleTest.spec.ts` file in your `{PROJECT_ROOT}/test/public` folder, which only has a empty test and you may change them into test against your own services.
+
+See the [Javascript Codegen Quick Start for Test](https://github.com/Azure/azure-sdk-for-js/blob/main/documentation/test-quickstart.md) for information on how to write and run tests for the Javascript SDK.
+
+## Prerequisites
+
+- To record and playback the tests, [Docker](https://www.docker.com/) is required when we run the test, as the [test proxy server](https://github.com/Azure/azure-sdk-tools/tree/main/tools/test-proxy) is run in a container during testing. When running the tests, ensure the Docker daemon is running and you have permission to use it.
 
 1. **run the test**  
-    Now, you can run the test like this.
-    ```shell  
+    Now, you can run the test like this. If you are the first time to run test, you need to set the environment variable `TEST_MODE` to `record`. This will generate recordings for your test they could be used in `playback` mode.
+    On Linux, you could use `export` to set env variable:
+    ```shell
     rush build -t ${PACKAGE_NAME}
-    export TEST_MODE=record && rushx test # this will run live test and generate a recordings folder, you will need to submit it in the PR. 
+    export TEST_MODE=record && rushx test # this will run live test and generate a recordings folder, you will need to submit it in the PR.
     ```
-    You can also run the playback mode test if your apis don't have breaking changes and you already done the recording before.  
-    ```shell 
+    On Windows, you could use `SET`:
+    ```shell
     rush build -t ${PACKAGE_NAME}
-    rushx test 
+    SET TEST_MODE=record&& rushx test # this will run live test and generate a recordings folder, you will need to submit it in the PR.
     ```
+    You can also run the `playback` mode test if your apis don't have breaking changes and you've already done the recording before.
+    On Linux, you could use below commands:
+    ```shell
+    rush build -t ${PACKAGE_NAME}
+    export TEST_MODE=playback && rushx test # this will run live test and generate a recordings folder, you will need to submit it in the PR.
+    ```
+    On Windows, you can use:
+    ```shell
+    rush build -t ${PACKAGE_NAME}
+    SET TEST_MODE=playback&& rushx test # this will run live test and generate a recordings folder, you will need to submit it in the PR.
+    ```
+
 # How to write samples
 
 We author TypeScript samples under the `samples-dev` folder. You can use sample-dev template for reference [samples-dev folder](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/template/template/samples-dev)  folder and update the relevant information for your service such as package-name, sample code, description, etc.  
@@ -210,3 +229,8 @@ If there's already a ci.yml file in your project path. then the only thing you n
 
 # Create API View
 You may also want to create API View when submitting a PR. You can do it easily by uploading a json file to [API View Website](https://apiview.dev/). The json file is under `<you-sdk-folder>/temp`, and its name ends with `api.json`. For example: `sdk/compute/arm-compute/temp/arm-compute.api.json`.
+
+# How to do customizations
+There is many information about the SDK that AutoRest will never know, so you may want to do your customizations based on generated code. 
+
+We collect some common customization cases and you can read [Customization on the RLC rest-level client libraries](https://github.com/Azure/azure-sdk-for-js/blob/main/documentation/RLC-customization.md) for more details.
