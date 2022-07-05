@@ -1,12 +1,13 @@
 {
   "name": "@azure/core-util",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Core library for shared utility methods",
   "sdk-type": "client",
   "main": "dist/index.js",
   "module": "dist-esm/src/index.js",
   "browser": {
-    "./dist-esm/src/isNode.js": "./dist-esm/src/isNode.browser.js"
+    "./dist-esm/src/isNode.js": "./dist-esm/src/isNode.browser.js",
+    "./dist-esm/src/sha256.js": "./dist-esm/src/sha256.browser.js"
   },
   "react-native": {
     "./dist/index.js": "./dist-esm/src/index.js"
@@ -81,7 +82,7 @@
     "chai": "^4.2.0",
     "downlevel-dts": "^0.8.0",
     "cross-env": "^7.0.2",
-    "eslint": "^7.15.0",
+    "eslint": "^8.0.0",
     "inherits": "^2.0.3",
     "karma": "^6.2.0",
     "karma-chrome-launcher": "^3.0.0",

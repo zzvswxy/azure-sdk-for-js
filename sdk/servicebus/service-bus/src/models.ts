@@ -141,11 +141,18 @@ export interface ServiceBusReceiverOptions {
   subQueueType?: "deadLetter" | "transferDeadLetter";
 
   /**
-   * The maximum duration in milliseconds until which the lock on the message will be renewed
-   * by the sdk automatically. This auto renewal stops once the message is settled.
+   * The maximum duration, in milliseconds, that the lock on the message will be renewed automatically by the client.
+   * This auto renewal stops once the message is settled.
    *
    * - **Default**: `300 * 1000` milliseconds (5 minutes).
    * - **To disable autolock renewal**, set this to `0`.
+   *
+   * **Example:**
+   *
+   *    If the message lock expires in 2 minutes and your message processing time is 8 minutes...
+   *
+   *    Set maxAutoLockRenewalDurationInMs to 10 minutes, and the message lock will be automatically renewed for 4 times
+   *    (equivalent to having the message locked for 4 times its lock duration by leveraging the lock renewals).
    */
   maxAutoLockRenewalDurationInMs?: number;
   /**
@@ -245,10 +252,17 @@ export interface ServiceBusSessionReceiverOptions extends OperationOptionsBase {
    */
   receiveMode?: "peekLock" | "receiveAndDelete";
   /**
-   * The maximum duration in milliseconds
-   * until which, the lock on the session will be renewed automatically by the sdk.
+   * The maximum duration, in milliseconds, that the lock on the session will be renewed automatically by the client.
+   *
    * - **Default**: `300000` milliseconds (5 minutes).
    * - **To disable autolock renewal**, set this to `0`.
+   *
+   * **Example:**
+   *
+   *    If the lock expires in 2 minutes and your processing time is 8 minutes...
+   *
+   *    Set maxAutoLockRenewalDurationInMs to 10 minutes, and the lock will be automatically renewed about 4 times
+   *    (equivalent to having the session locked for 4 times its lock duration by leveraging the lock renewals).
    */
   maxAutoLockRenewalDurationInMs?: number;
   /**
@@ -267,4 +281,9 @@ export interface PeekMessagesOptions extends OperationOptionsBase {
    * The sequence number to start peeking messages from (inclusive).
    */
   fromSequenceNumber?: Long;
+  /**
+   * @beta
+   * (Experimental for diagnostic purpose) Specifies whether to omit the body when peeking messages. Default  value `false`.
+   */
+  omitMessageBody?: boolean;
 }
