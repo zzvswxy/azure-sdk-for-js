@@ -10,6 +10,7 @@ specifiers:
   '@rush-temp/ai-text-analytics': file:./projects/ai-text-analytics.tgz
   '@rush-temp/app-configuration': file:./projects/app-configuration.tgz
   '@rush-temp/arm-advisor': file:./projects/arm-advisor.tgz
+  '@rush-temp/arm-agrifood': file:./projects/arm-agrifood.tgz
   '@rush-temp/arm-analysisservices': file:./projects/arm-analysisservices.tgz
   '@rush-temp/arm-apimanagement': file:./projects/arm-apimanagement.tgz
   '@rush-temp/arm-app': file:./projects/arm-app.tgz
@@ -298,6 +299,7 @@ dependencies:
   '@rush-temp/ai-text-analytics': file:projects/ai-text-analytics.tgz
   '@rush-temp/app-configuration': file:projects/app-configuration.tgz
   '@rush-temp/arm-advisor': file:projects/arm-advisor.tgz
+  '@rush-temp/arm-agrifood': file:projects/arm-agrifood.tgz
   '@rush-temp/arm-analysisservices': file:projects/arm-analysisservices.tgz
   '@rush-temp/arm-apimanagement': file:projects/arm-apimanagement.tgz
   '@rush-temp/arm-app': file:projects/arm-app.tgz
@@ -3836,7 +3838,7 @@ packages:
     dependencies:
       semver: 7.3.7
       shelljs: 0.8.5
-      typescript: 4.8.0-dev.20220704
+      typescript: 4.8.0-dev.20220705
     dev: false
 
   /downlevel-dts/0.4.0:
@@ -8533,8 +8535,8 @@ packages:
     hasBin: true
     dev: false
 
-  /typescript/4.8.0-dev.20220704:
-    resolution: {integrity: sha512-XE3YiCNpi7gHeoJ9UKkqRlEiJipxloSmV8TBHmHMU3sl65KbATTZAn45kVEsfFdKLVnxselUhX2iMR5PUCqCrw==}
+  /typescript/4.8.0-dev.20220705:
+    resolution: {integrity: sha512-sRnXrV4EzqJhcVnlve3h6S99jIT7cF40ECs+qm0hMMy9r2aZiZdIN7gU30oZeYSexUPXYoybp6L5FxK7ndxd2A==}
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: false
@@ -9448,6 +9450,31 @@ packages:
     transitivePeerDependencies:
       - '@types/node'
       - encoding
+      - supports-color
+    dev: false
+
+  file:projects/arm-agrifood.tgz:
+    resolution: {integrity: sha512-kIUXSsMfVUg5H9wYojjSOGKC5ZI0ndnpqcUxv6QrMfsvbxIit5CMY/umpGkFqjXlA0gBQfGke56zPsQ7SpCXKg==, tarball: file:projects/arm-agrifood.tgz}
+    name: '@rush-temp/arm-agrifood'
+    version: 0.0.0
+    dependencies:
+      '@azure/identity': 2.0.5
+      '@microsoft/api-extractor': 7.18.11
+      '@rollup/plugin-commonjs': 21.1.0_rollup@2.75.7
+      '@rollup/plugin-json': 4.1.0_rollup@2.75.7
+      '@rollup/plugin-multi-entry': 4.1.0_rollup@2.75.7
+      '@rollup/plugin-node-resolve': 13.3.0_rollup@2.75.7
+      cross-env: 7.0.3
+      mkdirp: 1.0.4
+      mocha: 7.2.0
+      rimraf: 3.0.2
+      rollup: 2.75.7
+      rollup-plugin-sourcemaps: 0.6.3_rollup@2.75.7
+      tslib: 2.4.0
+      typescript: 4.2.4
+      uglify-js: 3.16.2
+    transitivePeerDependencies:
+      - '@types/node'
       - supports-color
     dev: false
 
