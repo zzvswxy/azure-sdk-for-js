@@ -1,6 +1,19 @@
 # Release History
 
-## 1.2.1 (Unreleased)
+## 1.2.3 (Unreleased)
+
+### Features Added
+
+- Add support for CDATA secions with the `cdataPropName`
+- Add support for exempting nodes from parsing with `stopNodes`.
+
+### Breaking Changes
+
+### Bugs Fixed
+
+### Other Changes
+
+## 1.2.2 (Unreleased)
 
 ### Features Added
 
@@ -9,6 +22,12 @@
 ### Bugs Fixed
 
 ### Other Changes
+
+## 1.2.1 (2022-05-05)
+
+### Bugs Fixed
+
+- Add a `react-native` mapping to use `fast-xml-parser` for xml building/parsing as it is already in our dependency list.  With this customers don't need to polyfill the DOM api for XML processing.
 
 ## 1.2.0 (2022-02-03)
 
