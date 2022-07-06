@@ -1,12 +1,16 @@
 {
   "name": "@azure/core-xml",
-  "version": "1.2.1",
+  "version": "1.2.3",
   "description": "Core library for interacting with XML payloads",
   "sdk-type": "client",
   "main": "dist/index.js",
   "module": "dist-esm/src/index.js",
   "browser": {
     "./dist-esm/src/xml.js": "./dist-esm/src/xml.browser.js"
+  },
+  "react-native": {
+    "./dist/index.js": "./dist-esm/src/index.js",
+    "./dist-esm/src/xml.js": "./dist-esm/src/xml.js"
   },
   "types": "types/latest/core-xml.d.ts",
   "typesVersions": {
@@ -66,7 +70,7 @@
   "prettier": "@azure/eslint-plugin-azure-sdk/prettier.json",
   "dependencies": {
     "tslib": "^2.2.0",
-    "fast-xml-parser": "^4.0.1"
+    "fast-xml-parser": "^4.0.8"
   },
   "devDependencies": {
     "@azure/dev-tool": "^1.0.0",
@@ -75,12 +79,11 @@
     "@types/mocha": "^7.0.2",
     "@types/node": "^12.0.0",
     "@types/sinon": "^9.0.4",
-    "@types/xml2js": "^0.4.3",
     "@azure/eslint-plugin-azure-sdk": "^3.0.0",
     "chai": "^4.2.0",
     "downlevel-dts": "^0.8.0",
     "cross-env": "^7.0.2",
-    "eslint": "^7.15.0",
+    "eslint": "^8.0.0",
     "inherits": "^2.0.3",
     "karma": "^6.2.0",
     "karma-chrome-launcher": "^3.0.0",

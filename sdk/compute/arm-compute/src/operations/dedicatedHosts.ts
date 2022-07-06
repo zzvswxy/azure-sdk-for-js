@@ -438,7 +438,7 @@ export class DedicatedHostsImpl implements DedicatedHosts {
    * Restart the dedicated host. The operation will complete successfully once the dedicated host has
    * restarted and is running. To determine the health of VMs deployed on the dedicated host after the
    * restart check the Resource Health Center in the Azure Portal. Please refer to
-   * https://docs.microsoft.com/en-us/azure/service-health/resource-health-overview for more details.
+   * https://docs.microsoft.com/azure/service-health/resource-health-overview for more details.
    * @param resourceGroupName The name of the resource group.
    * @param hostGroupName The name of the dedicated host group.
    * @param hostName The name of the dedicated host.
@@ -506,7 +506,7 @@ export class DedicatedHostsImpl implements DedicatedHosts {
    * Restart the dedicated host. The operation will complete successfully once the dedicated host has
    * restarted and is running. To determine the health of VMs deployed on the dedicated host after the
    * restart check the Resource Health Center in the Azure Portal. Please refer to
-   * https://docs.microsoft.com/en-us/azure/service-health/resource-health-overview for more details.
+   * https://docs.microsoft.com/azure/service-health/resource-health-overview for more details.
    * @param resourceGroupName The name of the resource group.
    * @param hostGroupName The name of the dedicated host group.
    * @param hostName The name of the dedicated host.
@@ -570,12 +570,12 @@ const createOrUpdateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.CloudError
     }
   },
-  requestBody: Parameters.parameters6,
+  requestBody: Parameters.parameters16,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.resourceGroupName,
     Parameters.subscriptionId,
+    Parameters.resourceGroupName,
     Parameters.hostGroupName,
     Parameters.hostName
   ],
@@ -604,12 +604,12 @@ const updateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.CloudError
     }
   },
-  requestBody: Parameters.parameters7,
+  requestBody: Parameters.parameters17,
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.resourceGroupName,
     Parameters.subscriptionId,
+    Parameters.resourceGroupName,
     Parameters.hostGroupName,
     Parameters.hostName
   ],
@@ -633,8 +633,8 @@ const deleteOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.resourceGroupName,
     Parameters.subscriptionId,
+    Parameters.resourceGroupName,
     Parameters.hostGroupName,
     Parameters.hostName
   ],
@@ -653,11 +653,11 @@ const getOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.CloudError
     }
   },
-  queryParameters: [Parameters.apiVersion, Parameters.expand1],
+  queryParameters: [Parameters.apiVersion, Parameters.expand2],
   urlParameters: [
     Parameters.$host,
-    Parameters.resourceGroupName,
     Parameters.subscriptionId,
+    Parameters.resourceGroupName,
     Parameters.hostGroupName,
     Parameters.hostName
   ],
@@ -679,8 +679,8 @@ const listByHostGroupOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.resourceGroupName,
     Parameters.subscriptionId,
+    Parameters.resourceGroupName,
     Parameters.hostGroupName
   ],
   headerParameters: [Parameters.accept],
@@ -702,8 +702,8 @@ const restartOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.resourceGroupName,
     Parameters.subscriptionId,
+    Parameters.resourceGroupName,
     Parameters.hostGroupName,
     Parameters.hostName
   ],
@@ -724,9 +724,9 @@ const listByHostGroupNextOperationSpec: coreClient.OperationSpec = {
   queryParameters: [Parameters.apiVersion],
   urlParameters: [
     Parameters.$host,
-    Parameters.resourceGroupName,
     Parameters.subscriptionId,
     Parameters.nextLink,
+    Parameters.resourceGroupName,
     Parameters.hostGroupName
   ],
   headerParameters: [Parameters.accept],
