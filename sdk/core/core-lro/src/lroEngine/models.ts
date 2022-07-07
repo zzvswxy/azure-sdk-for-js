@@ -31,14 +31,13 @@ export interface LroEngineOptions<TResult, TState> {
    * A predicate to determine whether the LRO finished processing.
    */
   isDone?: (lastResponse: unknown, state: TState) => boolean;
-}
 
-export const successStates = ["succeeded"];
-export const failureStates = ["failed", "canceled", "cancelled"];
-/**
- * The LRO states that signal that the LRO has completed.
- */
-export const terminalStates = successStates.concat(failureStates);
+  /**
+   * A function that takes the mutable state as input and attempts to cancel the
+   * LRO.
+   */
+  cancel?: (state: TState) => Promise<void>;
+}
 
 /**
  * The potential location of the result of the LRO if specified by the LRO extension in the swagger.
@@ -82,25 +81,24 @@ export interface LroResponse<T> {
   rawResponse: RawResponse;
 }
 
-/** The type of which LRO implementation being followed by a specific API. */
-export type LroMode = "Location" | "Body";
-
-/**
- * The configuration of a LRO to determine how to perform polling and checking whether the operation has completed.
- */
-export interface LroConfig {
-  /** The LRO mode */
-  mode?: LroMode;
-  /** The path of a provisioned resource */
+export interface LroInfo {
+  /** The polling URL */
+  pollingUrl?: string;
+  /** The resource location URL */
   resourceLocation?: string;
+  /** The LRO mode */
+  mode: "OperationLocation" | "ResourceLocation" | "Body" | "None";
 }
 
 /**
  * Type of a polling operation state that can actually be resumed.
  */
 export type ResumablePollOperationState<T> = PollOperationState<T> & {
+  /** The response received when initiating the LRO */
   initialRawResponse?: RawResponse;
-  config?: LroConfig;
+  /** The LRO configuration */
+  config?: LroInfo;
+  /** @deprecated use state.config.pollingUrl instead */
   pollingURL?: string;
 };
 
@@ -111,7 +109,7 @@ export interface PollerConfig {
 /**
  * The type of a terminal state of an LRO.
  */
-export interface LroTerminalState<T> extends LroResponse<T> {
+interface LroTerminalState<T> extends LroResponse<T> {
   /**
    * Whether the operation has finished.
    */
@@ -121,7 +119,7 @@ export interface LroTerminalState<T> extends LroResponse<T> {
 /**
  * The type of an in-progress state of an LRO.
  */
-export interface LroInProgressState<T> extends LroResponse<T> {
+interface LroInProgressState<T> extends LroResponse<T> {
   /**
    * Whether the operation has finished.
    */
