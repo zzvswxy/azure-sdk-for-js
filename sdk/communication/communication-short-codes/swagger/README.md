@@ -7,12 +7,12 @@
 ```yaml
 package-name: "@azure/communication-short-codes"
 description: Short code acquiring and management client
-package-version: 1.0.0-beta.2
+package-version: 1.0.0-beta.3
 generate-metadata: false
 license-header: MICROSOFT_MIT_NO_VERSION
 output-folder: ../src/generated
 tag: package-shortcode-2021-10-25-preview
-require: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/ca0335b44b4eca2c5b5673ee2c58a87e524b669f/specification/communication/data-plane/ShortCodes/readme.md
+input-file: ./shortcodes.json
 model-date-time-as-string: false
 optional-response-headers: true
 payload-flattening-threshold: 10
@@ -42,4 +42,19 @@ directive:
       if ($.modelAsString) {
         $.modelAsString = false
       }    
+```
+
+### Fix the "type" property from the Program Brief Attachment model. It was being generated as "typeParam" and not being serialized correctly when sending the request.
+
+```yaml
+directive:
+  - from: swagger-document
+    where: $.definitions.ProgramBriefAttachment.properties.type
+    transform: >
+      $["x-ms-client-name"] = "type_param_attachment";
+
+modelerfour:
+  naming:
+    override:
+      "type_param_attachment": $DO_NOT_NORMALIZE$type
 ```
